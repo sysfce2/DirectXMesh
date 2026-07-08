@@ -46,7 +46,7 @@ jobs:
 
       matrix:
         build_type: [x64-Debug-MinGW, x64-Release-MinGW]
-        shared: ['OFF']
+        shared: ['OFF', 'ON']
 
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -61,11 +61,14 @@ jobs:
       - name: 'Install Ninja'
         run: choco install ninja
 
+      # we set the media paths to silence a CMake warning in the tests, but we don't run them here.
       - name: 'Set triplet'
         shell: pwsh
         run: |
           echo "VCPKG_INSTALLED_DIR=${{ github.workspace }}/build/vcpkg_installed" >> $env:GITHUB_ENV
           echo "VCPKG_DEFAULT_TRIPLET=x64-mingw-static" >> $env:GITHUB_ENV
+          echo "DIRECTXMESH_MEDIA_PATH=${{ github.workspace }}" >> $env:GITHUB_ENV
+          echo "DIRECTXTEX_MEDIA_PATH=${{ github.workspace }}" >> $env:GITHUB_ENV
 
       - name: Get vcpkg commit hash
         shell: pwsh
